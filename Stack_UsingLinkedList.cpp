@@ -37,10 +37,63 @@ private:
 public:
 	Stack() : head(NULL){};
 	~Stack();
+	Stack(Stack &temp);
+
+	Stack& operator=(const Stack& rhs);
 	bool push(int value);
 	int pop();
 	void printStack();
 };
+
+Stack& Stack::operator=(const Stack& rhs)
+{
+	if (this == &rhs)
+	{
+		return *this;
+	}
+	if (&rhs == NULL)
+	{
+		return Stack();
+	}
+
+	node *currRHS = rhs.head;
+	head = new node(currRHS->getValue());
+	node *curr = head;
+	if (currRHS->getNext() != NULL)
+		currRHS = currRHS->getNext();
+	while (currRHS)
+	{
+		node *newNode = new node(currRHS->getValue());
+		curr->setNext(newNode);
+		curr = curr->getNext();
+		currRHS = currRHS->getNext();
+	}
+	
+	return *this;
+}
+
+Stack::Stack(Stack &rhs)
+{
+	if (&rhs == NULL)
+	{
+		head = new node();
+		return;
+	}
+
+	node *currRHS = rhs.head;
+	head = new node(currRHS->getValue());
+	node *curr = head;
+	if (currRHS->getNext() != NULL)
+		currRHS = currRHS->getNext();
+	while (currRHS)
+	{
+		node *newNode = new node(currRHS->getValue());
+		curr->setNext(newNode);
+		curr = curr->getNext();
+		currRHS = currRHS->getNext();
+	}
+
+}
 
 bool Stack::push(int value)
 {
@@ -84,6 +137,11 @@ Stack::~Stack()
 
 void Stack::printStack()
 {
+	if (!head)
+	{
+		cout << "Stack is empty" << endl;
+	}
+	//cout << "Printing Stack" << endl;
 	node *curr = head;
 	while (curr)
 	{
@@ -100,11 +158,24 @@ int main()
 		stack.push(3);
 		stack.push(4);
 		stack.push(5);
+		cout << "Printing Stack 1 " << endl;
 		stack.printStack();
-		stack.pop();
-		stack.pop();
-		stack.pop();
-		stack.push(3);
+	Stack stack2(stack);
+		cout << "Printing Stack 2 , copied" << endl;
+		stack2.printStack();
+	Stack stack3;
+		cout << "Printing Stack 3 , empty" << endl;
+		stack3.printStack();
+		stack3 = stack2;
+		cout << "Printing Stack 3 , assigned" << endl;
+		stack3.printStack();
+		stack3.pop();
+		stack3.pop();
+		stack2.pop();
+		stack2.pop();
+		cout << "Printing Stacks " << endl;
 		stack.printStack();
-	
+		stack2.printStack();
+		stack3.printStack();
+		
 }
