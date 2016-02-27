@@ -1,5 +1,6 @@
-// Add/Delete node in Linked list 
-// printList
+// Remove duplicated from LinkedList
+// Using hashmap, storing each element and see if that exist then remove current node.
+// what if we can't use additional storage.
 
 
 #include "stdafx.h"
@@ -82,7 +83,13 @@ public:
 		if (_pHead->getValue() == val)
 		{
 			Node* temp = _pHead;
-			_pHead = _pHead->getNext();
+			if (_pHead->getNext() != NULL)
+			{
+				_pHead = _pHead->getNext();
+			}
+			else{
+				_pHead = NULL;
+			}
 			delete temp;
 		}
 
@@ -103,20 +110,72 @@ public:
 		}
 	
 	}
+
+	void deleteAllNode(int val)
+	{
+		if (_pHead == NULL)
+		{
+			cout << "List is empty";
+			return;
+		}
+		if (_pHead->getValue() == val)
+		{
+			Node* temp = _pHead;
+			if (_pHead->getNext() != NULL)
+			{
+				_pHead = _pHead->getNext();
+				delete temp;
+				deleteAllNode(val);
+			}
+			else{
+				_pHead = NULL;
+				delete temp;
+			}
+			
+		}
+
+		Node* ptr = _pHead;
+
+		while (ptr != NULL && ptr->getNext() != NULL)
+		{
+			if (ptr->getNext()->getValue() == val)
+			{
+				Node* temp = ptr->getNext();
+				if (ptr->getNext()->getNext() != NULL)
+				{
+					ptr->setNext(ptr->getNext()->getNext());
+					delete temp;
+					deleteAllNode(val);
+				}
+				else{
+					ptr->setNext(NULL);
+					delete temp;
+				}
+			}
+			ptr = ptr->getNext();
+		}
+		return;
+
+	}
+
 };
 
 int main(){
 	LinkedList *newList = new LinkedList();
 
-	newList->addNode(1);
 	newList->addNode(2);
-	newList->addNode(3);
-	newList->addNode(4);
+	newList->addNode(2);
+	newList->addNode(2);
+	//newList->addNode(4);
+	//newList->addNode(2);
+
 	newList->printList();
-	newList->deleteNode(1);
-	newList->deleteNode(2);
-	newList->deleteNode(3);
-	newList->deleteNode(4);
-	newList->deleteNode(0);
+	//newList->deleteNode(1);
+	newList->deleteAllNode(2);
+	cout << "deleted List" << endl;
 	newList->printList();
+	newList->addNode(2);
+	cout << "deleted List" << endl;
+	newList->printList();
+
 }
